@@ -1,0 +1,20 @@
+<!-- config.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuration</title>
+</head>
+<body>
+    <h1>Database Configuration</h1>
+    <p>Host: {{ database_config.host }}</p>
+    <p>Port: {{ database_config.port }}</p>
+    <p>Username: {{ database_config.username }}</p>
+    <p>Password: {{ database_config.password }}</p>
+
+    <h1>Server Configuration</h1>
+    <p>Address: {{ server_config.address }}</p>
+    <p>Port: {{ server_config.port }}</p>
+</body>
+</html>

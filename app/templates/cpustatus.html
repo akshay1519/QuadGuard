@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CPU Monitoring</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>CPU Monitoring</h1>
+    <button id="start">Start Monitoring</button>
+    <button id="stop">Stop Monitoring</button>
+    <div id="message"></div>
+
+    <script>
+        var ws;
+    
+        $("#start").click(function(){
+            $.post("/start_monitoring", function(data) {
+                $('#message').append(data.message + '<br>');
+                ws = new WebSocket("ws://localhost:5000/cpustatus");
+    
+                ws.onmessage = function(event) {
+                    $('#message').append(event.data + '<br>');
+                };
+            });
+        });
+    
+        $("#stop").click(function(){
+            $.post("/stop_monitoring", function(data) {
+                $('#message').append(data.message + '<br>');
+                if (ws) {
+                    ws.close();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
