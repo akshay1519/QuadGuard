@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Python Assignment</title>
+    <link rel="stylesheet" type="text/css" href="static/index.css">
 </head>
 <body>
-    <button id="configurationButton" onclick="window.location.href = '/config';">Configuration</button>
-    <button id="cpuHealthButton" onclick="window.location.href = '/cpustatus';">CPU Health</button>
-    <button id="backupButton">Backup</button>
-    <form action="/password" method="post">
-        <textarea id="commonTextArea" name="text" rows="4" cols="50"></textarea>
-        <input type="submit" value="Valid Password">
-    </form>
+    <div id="button-container"></div>
+        <button id="configurationButton" onclick="window.location.href = '/config';">Configuration</button>
+        <button id="cpuHealthButton" onclick="window.location.href = '/cpustatus';">CPU Health</button>
+        <button id="passwordButton" onclick="window.location.href = '/password';">Password</button>
+        <button id="backupButton" onclick="window.location.href = '/backup';">Backup</button>
+    </div>
 </body>
 </html>

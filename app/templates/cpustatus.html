@@ -1,36 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CPU Monitoring</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="static/cpustatus.css">
+    <title>CPU Monitor</title>
 </head>
 <body>
-    <h1>CPU Monitoring</h1>
-    <button id="start">Start Monitoring</button>
-    <button id="stop">Stop Monitoring</button>
-    <div id="message"></div>
+    <h2>CPU Health Status</h2>
+    <div id="messages"></div>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
     <script>
-        var ws;
-    
-        $("#start").click(function(){
-            $.post("/start_monitoring", function(data) {
-                $('#message').append(data.message + '<br>');
-                ws = new WebSocket("ws://localhost:5000/cpustatus");
-    
-                ws.onmessage = function(event) {
-                    $('#message').append(event.data + '<br>');
-                };
+        var socket = io({ autoConnect: false });
+
+        document.getElementById('startButton').addEventListener('click', function() {
+        socket.connect();
+
+            socket.on('connect', function() {
+                console.log('WebSocket connected');
+                socket.emit('start_monitoring');
+
+                socket.on('cpu_usage', function(msg) {
+                    document.getElementById('messages').innerHTML = msg.data;
+                });
             });
         });
-    
-        $("#stop").click(function(){
-            $.post("/stop_monitoring", function(data) {
-                $('#message').append(data.message + '<br>');
-                if (ws) {
-                    ws.close();
-                }
-            });
+
+        document.getElementById('stopButton').addEventListener('click', function() {
+            if (socket) {
+                socket.emit('stop_monitoring');
+                console.log('WebSocket disconnected');
+                socket.disconnect();
+                document.getElementById('messages').innerHTML = "Monitoring stopped";
+            }
         });
     </script>
 </body>

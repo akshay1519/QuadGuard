@@ -1,4 +1,3 @@
-import sys
 import os
 import shutil
 import datetime
@@ -22,11 +21,6 @@ class Backup:
         # Get current timestamp
         timestamp = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 
-        # for root, dirs, files in os.walk(self.source_dir):
-        #     print(f"Root: {root}")
-        #     print(f"Directories: {dirs}")
-        #     print(f"Files: {files}")
-
         # Copy the files from source directory to destination directory
         for root, dirs, files in os.walk(self.source_dir):
             for file in files:
@@ -42,13 +36,3 @@ class Backup:
                 shutil.copy2(source_file, destination_file)
 
         print("Backup completed successfully!")
-
-# # Take input from user for source directory and destination directory
-# if len(sys.argv) != 3:
-#     print("Command: python backup.py <source_dir> <destination_dir>")
-#     sys.exit(1)
-
-# source_dir = sys.argv[1]
-# destination_dir = sys.argv[2]
-# backup = Backup(source_dir, destination_dir)
-# backup.run_backup()

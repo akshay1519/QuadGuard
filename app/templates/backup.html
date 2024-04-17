@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Backup Page</title>
+    <link rel="stylesheet" type="text/css" href="static/backup.css">
+</head>
+<body>
+    <div class="container">
+        <form action="/backup" method="post" onsubmit="encodeDirPaths(this)">
+            <label for="source_dir_path">Enter source directory path:</label><br>
+            <input type="text" id="source_dir_path" name="source_dir_path" placeholder="C:\source_dir" required><br>
+            <label for="dest_dir_path">Enter destination directory path:</label><br>
+            <input type="text" id="dest_dir_path" name="dest_dir_path" placeholder="C:\dest_dir" required><br>
+            <input type="submit" value="Submit">
+        </form>
+        {% if message %}
+        <p class="message">{{ message }}</p>
+        {% endif %}
+    </div>
+</body>
+</html>

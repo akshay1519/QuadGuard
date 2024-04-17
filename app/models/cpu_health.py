@@ -1,12 +1,13 @@
-import socket
+import time
 import psutil
-import threading
+from threading  import Thread
 
-class CpuHealth:
-    def __init__(self, host='localhost', port=5000):
+class cpu_health :
+    def __init__(self, socketio):
+        self.socketio = socketio
+        self.thread = None
         self.exit_program = False
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((host, port))  # 
+        self.monitoring = False
 
     def monitor(self):
         while not self.exit_program:
@@ -16,26 +17,34 @@ class CpuHealth:
                 print(f"Error occured while monitoring cpu usage: {e}")
                 continue
 
-            message = "Monitoring CPU usage..."
+            message = ""
             if cpu_usage >= 90:
                 message = "Alert! CPU usage exceeds threshold: 90%"
             elif cpu_usage >= 85:
                 message = "Alert! CPU usage exceeds threshold: 85%"
+            else:
+                message = f"Monitoring CPU usage... {cpu_usage}%"
 
-            print(message)
-            self.sock.sendall(message.encode())
+            print('Emitting message:', message)
+            self.socketio.emit('cpu_usage', {'data': message})
+            time.sleep(0.1)
+            
 
     def start_monitoring(self):
-        try:
+        if not self.monitoring:
+            self.monitoring = True    
             self.exit_program = False
-            self.thread = threading.Thread(target=self.monitor)
-            self.thread.start()
-        except Exception as e:
-            print(f"Error occurred while starting monitoring: {e}")
-
+            if self.thread is None or not self.thread.is_alive():
+                self.thread = Thread(target=self.monitor)
+                self.thread.start()
+            print('Monitoring started')
+    
     def stop_monitoring(self):
-        try:
+        if self.monitoring:
+            self.monitoring = False
             self.exit_program = True
-            self.thread.join()
-        except Exception as e:
-            print(f"Error occurred while stopping monitoring: {e}")
+            if self.thread is not None:
+                self.thread.join()
+                self.socketio.emit('cpu_usage', {'data': 'Monitoring stopped'})
+                self.thread = None
+            print('Monitoring stopped')
